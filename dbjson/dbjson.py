@@ -35,24 +35,24 @@ class DBjson:
         self.db = sessionlocal(self.app)
 
     def getall(self, dataclass):
-        users = (self.db).query(dataclass).all()
-        return jsony(users, many=True)
+        rdata = (self.db).query(dataclass).all()
+        return jsony(rdata, many=True)
 
     def get(self, dataclass, data: Dict[str, Any]):
         if len(data) == 1:
-            user = (self.db).query(dataclass).filter_by(**data).first()
-            if user == None:
+            rdata = (self.db).query(dataclass).filter_by(**data).first()
+            if rdata == None:
                 res = {'status': False, 'data':'data not found'}
             else:
-                return jsony(user)
+                return jsony(rdata)
         else:
             res = {"status": False, "data":"give only one key"}
         return json.dumps(res)
 
     def add(self, dataclass, data: Dict[str, Any]):
         try:
-            user = dataclass(**data)
-            (self.db).add(user)
+            rdata = dataclass(**data)
+            (self.db).add(rdata)
             (self.db).commit()
             res = {'status': True, 'data':'data added successfully'}
         except TypeError as e:
@@ -64,26 +64,35 @@ class DBjson:
 
     def delete(self, dataclass, data: Dict[str, Any]):
         if len(data) == 1:
-            user = (self.db).query(dataclass).filter_by(**data).first()
-            if user == None:
+            rdata = (self.db).query(dataclass).filter_by(**data).first()
+            if rdata == None:
                 res = {'status': False, 'data':'data not found'}
             else:
-                current_ssession  = (self.db).object_session(user)
-                current_ssession.delete(user)
+                current_ssession  = (self.db).object_session(rdata)
+                current_ssession.delete(rdata)
                 current_ssession.commit()
                 res = {'status': True, 'data':'data deleted successfully'}
         else:
             res = {"status": False, "data":"give only one key"}
         return json.dumps(res)
 
-    def update(self, dataclass, data: Dict[str, Any]):
-        # user = User.query.filter_by(sno=sno).first()
-        # user.name = name
-        # user.city = city
-        # db.session.commit()
-        # res = {'status': True, 'data':'data deleted successfully'}
-        # return json.dumps(res)
-        pass
+    def update(self, dataclass, data: Dict[str, Any], key: str):
+        key_value = data.get(key)
+        key1 = {key:key_value}
+        rdata = (self.db).query(dataclass).filter_by(**key1).first()
+        check_key = None
+        for key, value in data.items():
+            if hasattr(rdata, key):
+                check_key = True
+            else:
+                res = {'status': False, 'data':f"'{dataclass.__name__}' class has no atrribute {key}"}
+                return json.dumps(res)
+        if check_key:
+            for key, value in data.items():
+                setattr(rdata, key, value)
+        (self.db).commit()
+        res = {'status': True, 'data':'data updated successfully'}
+        return json.dumps(res)
 
     def search(self, dataclass, data: Dict[str, Any]):
         pass
