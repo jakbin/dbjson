@@ -11,6 +11,7 @@ crud operation with database using json.
  * create data.
  * read data.
  * delete data
+ * update data
 
 ## Install 
 ```python
@@ -22,5 +23,7 @@ see example [here](examples/test.py)
 
 ## Todo
 
- - [ ] update data (soon)
- - [ ] add many data 
+ - [x] update data
+ - [ ] add many data
+ - [ ] search data
+ - [ ] paginate data
