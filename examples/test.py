@@ -18,9 +18,13 @@ print(a.add(User, add_data))
 print(a.getall(User))
 
 # read single data
-data = {"sno":2}
+data = {"sno":1}
 print(a.get(User, data))
 
+# update data
+update_data = {"sno":1,"name": "jak bin","city": "india"}
+print(a.update(User, update_data, 'sno'))
+
 # delete data
-delete_data = {"sno":6}
+delete_data = {"sno":1}
 print(a.delete(User, delete_data))
