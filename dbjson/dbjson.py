@@ -4,21 +4,21 @@ from  sqlalchemy.orm import sessionmaker
 import json
 from typing import Any, Dict
 
-__version__ = '1.0.0'
+__version__ = '1.0.2'
 
 Base = declarative_base()
 
-def jsony(data, many:bool=None):
+def dicty(data, many:bool=None):
     if many:
         jdata=[]
         for a in data:
             (a.__dict__).pop('_sa_instance_state')
             b = a.__dict__
             jdata.append(b)
-        return json.dumps(jdata)
+        return jdata
     else:
         (data.__dict__).pop('_sa_instance_state')
-        return json.dumps(data.__dict__)
+        return data.__dict__
 
 def sessionlocal(db):
     SQLALCHEMY_DATABASE_URI = f'{db}'
@@ -36,15 +36,19 @@ class DBjson:
 
     def getall(self, dataclass):
         rdata = (self.db).query(dataclass).all()
-        return jsony(rdata, many=True)
+        if rdata == None:
+            res = {'status': False, 'data':'no data not found'}
+        else:
+            res = {'status': False, 'data':dicty(rdata)}
+        return json.dumps(res)
 
     def get(self, dataclass, data: Dict[str, Any]):
         if len(data) == 1:
             rdata = (self.db).query(dataclass).filter_by(**data).first()
             if rdata == None:
-                res = {'status': False, 'data':'data not found'}
+                res = {'status': False, 'data':'no data not found'}
             else:
-                return jsony(rdata)
+                res = {'status': True, 'data':dicty(rdata)}
         else:
             res = {"status": False, "data":"give only one key"}
         return json.dumps(res)
@@ -95,4 +99,12 @@ class DBjson:
         return json.dumps(res)
 
     def search(self, dataclass, data: Dict[str, Any]):
-        pass
+        search = "%{0}%".format(list(data.values())[0])
+        attr = (list(data)[0])
+        search_attr = getattr(dataclass, attr)
+        rdata =  (self.db).query(dataclass).filter(search_attr.like(search)).all()
+        if rdata == None:
+            res = {'status': False, 'data':'no data not found'}
+        else:
+            res = {"status": False, "data":dicty(rdata, many=True)}
+        return json.dumps(res)
