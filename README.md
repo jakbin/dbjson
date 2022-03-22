@@ -12,6 +12,7 @@ crud operation with database using json.
  * read data.
  * delete data
  * update data
+ * search data
 
 ## Install 
 ```python
@@ -25,5 +26,5 @@ see example [here](examples/test.py)
 
  - [x] update data
  - [ ] add many data
- - [ ] search data
+ - [x] search data
  - [ ] paginate data
