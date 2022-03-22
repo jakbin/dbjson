@@ -25,6 +25,10 @@ print(a.get(User, data))
 update_data = {"sno":1,"name": "jak bin","city": "india"}
 print(a.update(User, update_data, 'sno'))
 
+# search data
+search_data = {'name':'jak'}
+print(a.search(User, search_data))
+
 # delete data
 delete_data = {"sno":1}
 print(a.delete(User, delete_data))
