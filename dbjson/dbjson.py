@@ -3,8 +3,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from  sqlalchemy.orm import sessionmaker
 import json
 from typing import Any, Dict
+from os.path import isfile
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 Base = declarative_base()
 
@@ -32,14 +33,17 @@ class DBjson:
     """give database url like : DBjson('sqlite:///your.db')"""
     def __init__(self, app:str=None):
         self.app = app
+        if isfile(self.app) != True:
+            engine = create_engine(self.app, connect_args={"check_same_thread":False})
+            Base.metadata.create_all(engine)
         self.db = sessionlocal(self.app)
 
     def getall(self, dataclass):
         rdata = (self.db).query(dataclass).all()
-        if rdata == None:
+        if rdata == []:
             res = {'status': False, 'data':'no data not found'}
         else:
-            res = {'status': False, 'data':dicty(rdata)}
+            res = {'status': True, 'data':dicty(rdata, many=True)}
         return json.dumps(res)
 
     def get(self, dataclass, data: Dict[str, Any]):
@@ -103,8 +107,8 @@ class DBjson:
         attr = (list(data)[0])
         search_attr = getattr(dataclass, attr)
         rdata =  (self.db).query(dataclass).filter(search_attr.like(search)).all()
-        if rdata == None:
+        if rdata == []:
             res = {'status': False, 'data':'no data not found'}
         else:
-            res = {"status": False, "data":dicty(rdata, many=True)}
+            res = {"status": True, "data":dicty(rdata, many=True)}
         return json.dumps(res)
