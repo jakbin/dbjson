@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from  sqlalchemy.orm import sessionmaker
 import json
 from typing import Any, Dict
@@ -7,10 +7,15 @@ from os.path import isfile
 
 __version__ = '1.0.3'
 
-Base = declarative_base()
+class Base(object):
+    @declared_attr
+    def __tablename__(cls):
+        return cls.__name__.lower()
 
-def dicty(data, many:bool=None):
-    if many:
+Base = declarative_base(cls=Base)
+
+def dicty(data):
+    if type(data) is list:
         jdata=[]
         for a in data:
             (a.__dict__).pop('_sa_instance_state')
@@ -43,7 +48,7 @@ class DBjson:
         if rdata == []:
             res = {'status': False, 'data':'no data not found'}
         else:
-            res = {'status': True, 'data':dicty(rdata, many=True)}
+            res = {'status': True, 'data':dicty(rdata)}
         return json.dumps(res)
 
     def get(self, dataclass, data: Dict[str, Any]):
@@ -110,5 +115,5 @@ class DBjson:
         if rdata == []:
             res = {'status': False, 'data':'no data not found'}
         else:
-            res = {"status": True, "data":dicty(rdata, many=True)}
+            res = {"status": True, "data":dicty(rdata)}
         return json.dumps(res)

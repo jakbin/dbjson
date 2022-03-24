@@ -2,7 +2,6 @@ from dbjson import DBjson, Base
 from sqlalchemy import Column, Integer, String
 
 class User(Base):
-    __tablename__ = 'user'
     '''set structure of database'''
     sno = Column(Integer, primary_key=True, index=True)
     name = Column(String)
