@@ -25,6 +25,6 @@ see example [here](examples/test.py)
 ## Todo
 
  - [x] update data
- - [ ] add many data
+ - [ ] add multiple data
  - [x] search data
  - [ ] paginate data

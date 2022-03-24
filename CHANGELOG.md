@@ -4,4 +4,6 @@
 
 - `dev`
   - update data
+  - search data
+  - create database if not exists
 
