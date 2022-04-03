@@ -43,6 +43,6 @@ see example [here](examples/test.py)
 ## Todo
 
  - [x] update data
- - [ ] add multiple data
+ - [x] add multiple data
  - [x] search data
  - [ ] paginate data

@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from  sqlalchemy.orm import sessionmaker
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
 from os.path import isfile
 
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 
 class Base(object):
     @declared_attr
@@ -43,6 +43,10 @@ class DBjson:
             Base.metadata.create_all(engine)
         self.db = sessionlocal(self.app)
 
+    @property    
+    def Base(self):
+        return Base
+
     def getall(self, dataclass):
         rdata = (self.db).query(dataclass).all()
         if rdata == []:
@@ -72,8 +76,18 @@ class DBjson:
             res = {'status': False, 'data':str(e)}
         return json.dumps(res)
 
-    def addMany(self):
-        pass
+    def addMany(self, dataclass, data: List[Dict[str, Any]]):
+        for d in data:
+            try:
+                rdata = dataclass(**d)
+                (self.db).add(rdata)
+                (self.db).commit()
+            except TypeError as e:
+                res = {'status': False, 'data':str(e)}
+            else:
+                res = {'status': True, 'data':'all data added successfully'}
+        return json.dumps(res)
+
 
     def delete(self, dataclass, data: Dict[str, Any]):
         if len(data) == 1:

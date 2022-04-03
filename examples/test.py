@@ -1,17 +1,21 @@
-from dbjson import DBjson, Base
+from dbjson import DBjson
 from sqlalchemy import Column, Integer, String
 
-class User(Base):
+db = DBjson('sqlite:///test.db')
+
+class User(db.Base):
     '''set structure of database'''
     sno = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     city = Column(String)
 
-db = DBjson('sqlite:///test.db')
-
 # insert data
 add_data = {"name": "Jak","city": "india"}
 print(db.add(User, add_data))
+
+# insert multiple data
+addMany_data = [{"name": "Jaky","city": "india"},{"name": "Jak bin","city": "india"}]
+print(a.addMany(User, addMany_data))
 
 # read all data
 print(db.getall(User))
