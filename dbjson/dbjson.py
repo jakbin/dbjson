@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine
+import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from  sqlalchemy.orm import sessionmaker
 import json
@@ -34,6 +35,12 @@ def sessionlocal(db):
     SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
     return SessionLocal()
 
+def _include_sqlalchemy(obj):
+    for module in sqlalchemy, sqlalchemy.orm:
+        for key in module.__all__:
+            if not hasattr(obj, key):
+                setattr(obj, key, getattr(module, key))
+
 class DBjson:
     """give database url like : DBjson('sqlite:///your.db')"""
     def __init__(self, app:str=None):
@@ -43,8 +50,10 @@ class DBjson:
             Base.metadata.create_all(engine)
         self.db = sessionlocal(self.app)
 
+        _include_sqlalchemy(self)
+
     @property    
-    def Base(self):
+    def Model(self):
         return Base
 
     def getall(self, dataclass):

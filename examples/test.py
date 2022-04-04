@@ -1,13 +1,12 @@
 from dbjson import DBjson
-from sqlalchemy import Column, Integer, String
 
 db = DBjson('sqlite:///test.db')
 
-class User(db.Base):
+class User(db.Model):
     '''set structure of database'''
-    sno = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    city = Column(String)
+    sno = db.Column(db.Integer, primary_key=True, index=True)
+    name = db.Column(db.String)
+    city = db.Column(db.String)
 
 # insert data
 add_data = {"name": "Jak","city": "india"}

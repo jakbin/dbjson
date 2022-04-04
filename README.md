@@ -27,7 +27,7 @@ from sqlalchemy import String, Column
 
 db = DBjson('sqlite:///test.db')
 
-class User(db.Base):
+class User(db.Model):
     name = Column(String)
 
 # insert data
@@ -38,7 +38,7 @@ print(db.add(User, add_data))
 print(db.getall(User))
 ```
 
-see example [here](examples/test.py)
+see full example [here](examples/test.py)
 
 ## Todo
 
