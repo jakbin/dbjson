@@ -6,7 +6,7 @@ import json
 from typing import Any, Dict, List
 from os.path import isfile
 
-__version__ = '1.0.4'
+__version__ = '1.0.5'
 
 class Base(object):
     @declared_attr
