@@ -23,12 +23,11 @@ pip install dbjsonpy
 minimal example
 ```python
 from dbjson import DBjson
-from sqlalchemy import String, Column
 
 db = DBjson('sqlite:///test.db')
 
 class User(db.Model):
-    name = Column(String)
+    name = db.Column(db.String)
 
 # insert data
 add_data = {"name": "Jak","city": "india"}
