@@ -1,1 +1,1 @@
-from dbjson.dbjson import DBjson, Base, __version__
+from dbjson.dbjson import DBjson, __version__
