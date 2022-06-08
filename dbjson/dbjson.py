@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from  sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import InvalidRequestError
 import json
 from typing import Any, Dict, List
 from os.path import isfile
@@ -66,7 +67,12 @@ class DBjson:
 
     def get(self, dataclass, data: Dict[str, Any]):
         if len(data) == 1:
-            rdata = (self.db).query(dataclass).filter_by(**data).first()
+            try:
+                rdata = (self.db).query(dataclass).filter_by(**data).first()
+            except InvalidRequestError:
+                key, _ = data.popitem()
+                res = {'status': False, 'data':f"'{dataclass.__name__}' class has no attribute '{key}' "}
+                return json.dumps(res)
             if rdata == None:
                 res = {'status': False, 'data':'no data not found'}
             else:
@@ -100,9 +106,15 @@ class DBjson:
 
     def delete(self, dataclass, data: Dict[str, Any]):
         if len(data) == 1:
-            rdata = (self.db).query(dataclass).filter_by(**data).first()
+            try:
+                rdata = (self.db).query(dataclass).filter_by(**data).first()
+            except InvalidRequestError:
+                key, _ = data.popitem()
+                res = {'status': False, 'data':f"'{dataclass.__name__}' class has no attribute '{key}' "}
+                return json.dumps(res)
             if rdata == None:
-                res = {'status': False, 'data':'data not found'}
+                _, value = data.popitem()
+                res = {'status': False, 'data':f"no data found value '{value}' "}
             else:
                 current_ssession  = (self.db).object_session(rdata)
                 current_ssession.delete(rdata)
