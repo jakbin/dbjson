@@ -34,7 +34,7 @@ add_data = {"name": "Jak","city": "india"}
 print(db.add(User, add_data))
 
 # read all data
-print(db.getall(User))
+print(db.get_all(User))
 ```
 
 see full example [here](examples/test.py)

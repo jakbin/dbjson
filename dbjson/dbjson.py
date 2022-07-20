@@ -57,7 +57,7 @@ class DBjson:
     def Model(self):
         return Base
 
-    def getall(self, dataclass):
+    def get_all(self, dataclass):
         rdata = (self.db).query(dataclass).all()
         if rdata == []:
             res = {'status': False, 'data':'no data not found'}
@@ -91,7 +91,7 @@ class DBjson:
             res = {'status': False, 'data':str(e)}
         return json.dumps(res)
 
-    def addMany(self, dataclass, data: List[Dict[str, Any]]):
+    def add_many(self, dataclass, data: List[Dict[str, Any]]):
         for d in data:
             try:
                 rdata = dataclass(**d)
@@ -127,7 +127,11 @@ class DBjson:
     def update(self, dataclass, data: Dict[str, Any], key: str):
         key_value = data.get(key)
         key1 = {key:key_value}
-        rdata = (self.db).query(dataclass).filter_by(**key1).first()
+        try:
+            rdata = (self.db).query(dataclass).filter_by(**key1).first()
+        except InvalidRequestError:
+            res = {'status': False, 'data':f"'{dataclass.__name__}' class has no property {key}"}
+            return json.dumps(res)
         check_key = None
         for key, value in data.items():
             if hasattr(rdata, key):
