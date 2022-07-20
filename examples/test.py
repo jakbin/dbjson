@@ -14,7 +14,7 @@ print(db.add(User, add_data))
 
 # insert multiple data
 addMany_data = [{"name": "Jaky","city": "india"},{"name": "Jak bin","city": "india"}]
-print(a.add_many(User, addMany_data))
+print(db.add_many(User, addMany_data))
 
 # read all data
 print(db.get_all(User))
