@@ -7,7 +7,7 @@ import json
 from typing import Any, Dict, List
 from os.path import isfile
 
-__version__ = '1.0.6'
+__version__ = '1.0.7'
 
 class Base(object):
     @declared_attr
@@ -57,7 +57,7 @@ class DBjson:
     def Model(self):
         return Base
 
-    def get_all(self, dataclass):
+    def getAll(self, dataclass):
         rdata = (self.db).query(dataclass).all()
         if rdata == []:
             res = {'status': False, 'data':'no data not found'}
@@ -91,7 +91,7 @@ class DBjson:
             res = {'status': False, 'data':str(e)}
         return json.dumps(res)
 
-    def add_many(self, dataclass, data: List[Dict[str, Any]]):
+    def addMany(self, dataclass, data: List[Dict[str, Any]]):
         for d in data:
             try:
                 rdata = dataclass(**d)

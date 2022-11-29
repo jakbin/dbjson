@@ -2,6 +2,8 @@ from dbjson import DBjson
 
 db = DBjson('sqlite:///test.db')
 
+print(dir(db))
+
 class User(db.Model):
     '''set structure of database'''
     sno = db.Column(db.Integer, primary_key=True, index=True)
@@ -14,10 +16,10 @@ print(db.add(User, add_data))
 
 # insert multiple data
 addMany_data = [{"name": "Jaky","city": "india"},{"name": "Jak bin","city": "india"}]
-print(db.add_many(User, addMany_data))
+print(db.addMany(User, addMany_data))
 
 # read all data
-print(db.get_all(User))
+print(db.getall(User))
 
 # read single data
 data = {"sno":1}
